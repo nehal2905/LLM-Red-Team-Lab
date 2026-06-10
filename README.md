@@ -119,6 +119,39 @@ The evaluation generated attack logs, metrics, and visualizations automatically 
 
 
 ---
+## Interactive Dashboard
+
+
+
+### Normal Query
+
+
+
+<img src="./docs/screenshots/normal_query.png" alt="Normal employee query" width="100%" />
+
+
+
+### Prompt Injection Detection
+
+
+
+<img src="./docs/screenshots/prompt_injection_blocked.png" alt="Prompt injection attack detected and blocked" width="100%" />
+
+
+
+### Data Exfiltration Prevention
+
+
+
+<img src="./docs/screenshots/data_exfiltration_blocked.png" alt="Data exfiltration attempt blocked" width="100%" />
+
+
+
+These screenshots demonstrate the live risk scoring engine, attack detection pipeline, and defense-in-depth controls operating against a local RAG application.
+
+
+
+---
 
 ## Attack 1 — Prompt Injection
 *Attack · Impact · Detection · Mitigation · Result* →
