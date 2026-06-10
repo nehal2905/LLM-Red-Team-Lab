@@ -57,6 +57,8 @@ you can run **detection-only (monitor)** or **detection + defense (enforce)**.
 That separation is what makes this read as detection engineering, not just a
 filter.
 
+<img src="./docs/architecture.png" alt="LLM Red-Team Lab Architecture" width="100%" />
+
 ---
 
 ## Threat Model
