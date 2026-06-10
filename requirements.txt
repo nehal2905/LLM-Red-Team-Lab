@@ -1,0 +1,27 @@
+# --- Core LLM / RAG stack ---
+ollama>=0.3.0
+langchain>=0.2.0
+langchain-community>=0.2.0
+chromadb>=0.5.0
+
+# --- Embeddings fallback (used when Ollama embeddings unavailable) ---
+sentence-transformers>=2.7.0
+
+# --- Config & logging ---
+pydantic>=2.7.0
+pydantic-settings>=2.3.0
+python-dotenv>=1.0.0
+structlog>=24.1.0
+
+# --- Data / eval ---
+pandas>=2.2.0
+numpy>=1.26.0
+pyyaml>=6.0
+matplotlib>=3.8.0
+plotly>=5.22.0
+
+# --- UI ---
+streamlit>=1.35.0
+
+# --- Tests ---
+pytest>=8.2.0
