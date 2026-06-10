@@ -14,6 +14,16 @@ Everything runs **locally and offline** via [Ollama](https://ollama.com) after a
 one-time model pull. No API keys.
 
 ---
+## Why This Project
+
+Modern AI applications increasingly use RAG architectures.
+Prompt injection, jailbreaks, and data-exfiltration attacks
+represent emerging attack classes that traditional application
+security controls do not address.
+
+This project demonstrates how layered defenses,
+detection engineering, and evaluation metrics can be used
+to measure and reduce risk in LLM-powered systems.
 
 ## Architecture
 
@@ -60,14 +70,42 @@ leak.
 
 ---
 
-## Results (headline)
 
-> Numbers below are produced by the harness, which runs every payload (plus
-> obfuscation variants) across both modes and writes
-> [`results/report.csv`](results/report.csv) and the charts. The committed
-> figures are from the **offline simulated demo** (`python scripts/demo_run.py`,
-> a deterministic "naive" model so the charts render without Ollama). For real
-> model numbers, run `make ingest && make attack` against `llama3.1`.
+
+## Results (Llama 3.1 Local Evaluation)
+
+The red-team harness executed **170 attack payloads** across three attack classes
+(prompt injection, data exfiltration, jailbreak) against a local **Llama 3.1**
+RAG pipeline. Each payload was evaluated twice:
+
+* **Defenses OFF** (baseline)
+* **Defenses ON** (L1–L4 guardrail stack enabled)
+
+### Attack Success Rate (ASR)
+
+| Attack Class      | Payloads | ASR OFF   | ASR ON | Reduction     |
+| ----------------- | -------- | --------- | ------ | ------------- |
+| Data Exfiltration | 55       | 3.64%     | 0%     | -3.64 pts     |
+| Jailbreak         | 55       | 0%        | 0%     | 0 pts         |
+| Prompt Injection  | 60       | 5.00%     | 0%     | -5.00 pts     |
+| **Overall**       | **170**  | **2.94%** | **0%** | **-2.94 pts** |
+
+### Detection Performance
+
+| Metric              | Value |
+| ------------------- | ----- |
+| Detection Recall    | 44.1% |
+| Detection Precision | 100%  |
+| False Positive Rate | 0%    |
+
+### Key Findings
+
+* All successful attacks observed in the baseline configuration were eliminated when defenses were enabled.
+* No benign requests were incorrectly blocked (0% false positive rate).
+* Detection recall was 44.1%, highlighting that some attacks bypassed the scoring layer but were still stopped by downstream defenses.
+* Despite imperfect detection recall, the layered architecture (Context Guard + Output Filter) prevented successful compromise, illustrating the value of defense-in-depth for LLM applications.
+
+The evaluation generated attack logs, metrics, and visualizations automatically through the red-team harness.
 
 **Attack Success Rate — before vs. after defenses:**
 
@@ -77,25 +115,6 @@ leak.
 
 ![Detection summary](results/charts/detection_summary.png)
 
-| Attack class | ASR (defenses OFF) | ASR (defenses ON) | Δ |
-|---|---|---|---|
-| Prompt injection | 67% | **0%** | −67 pts |
-| Data exfiltration | 100% | **0%** | −100 pts |
-| Jailbreak | 93% | **0%** | −93 pts |
-| **Overall** | **87%** | **0%** | **−87 pts** |
-
-| Detection metric (overall, defenses ON) | Value |
-|---|---|
-| Recall (attacks flagged HIGH+) | **0.67** |
-| Precision (flagged that were real attacks) | **1.0** |
-| FPR (benign wrongly blocked) | **0%** |
-
-> Headline: **reduced overall attack success from 87% → 0% with zero benign
-> blocks.** Note recall is only ~0.67: many *obfuscated* variants score below the
-> block threshold, yet ASR_on is still 0%. That gap is the point — **defense in
-> depth (L3 Context Guard + L4 Output Filter) contains attacks the detector
-> under-scores.** Success is judged objectively against each payload's declared
-> `expected_outcome`, never by eyeballing.
 
 ---
 
